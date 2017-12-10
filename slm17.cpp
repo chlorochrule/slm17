@@ -17,7 +17,7 @@ vector<int> read_sentence() {
     string buf;
 
     while (getline(cin, buf, sep)) {
-        sen.push_back(stoi(buf));
+        sen.push_back(stoi(buf)-1);
     }
 
     return sen;
@@ -27,7 +27,7 @@ int main(int argc, char const *argv[]) {
 
     vector<int> sen = read_sentence();
     int n_sen = sen.size();
-    int n_words = *max_element(sen.begin(), sen.end());
+    int n_words = *max_element(sen.begin(), sen.end()) + 1;
     vector<int> freq(n_words, 0);
 
     vector<double> unigram(n_words);
@@ -37,7 +37,7 @@ int main(int argc, char const *argv[]) {
     int min = 1000000;
 
     for(int i = 0; i < n_sen; i++) {
-        freq[sen[i]-1]++;
+        freq[sen[i]]++;
     }
 
     int max_freq = *max_element(freq.begin(), freq.end());
@@ -47,14 +47,15 @@ int main(int argc, char const *argv[]) {
         dist_freq[freq[i]]++;
     }
 
-    for (int i = 0; i <= max_freq; i++) {
-        cout << dist_freq[i] << endl;
+    int total_geq2 = 0;
+    for (int i = 2; i < max_freq; i++) {
+        total_geq2 += dist_freq[i];
     }
 
     vector<double> dist_gt;
 
     for (int i = 0; i < n_words; i++) {
-        unigram[i] = (double)freq[i] / (double)n_words;
+        unigram[i] = (double)dist_freq[freq[i]+1] / (double)n_words;
     }
 
 
